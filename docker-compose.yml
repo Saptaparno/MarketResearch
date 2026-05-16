@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: marketresearch-postgres
+    environment:
+      POSTGRES_USER: market
+      POSTGRES_PASSWORD: market
+      POSTGRES_DB: marketresearch
+    # Host 5433 avoids clashing with Homebrew Postgres on 5432
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U market -d marketresearch"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
