@@ -15,6 +15,7 @@ import uvicorn
 
 load_dotenv()
 
+_internal = os.getenv("INTERNAL_SERVICE_TOKEN")
 
 agent_os = AgentOS(
     id="agentos-demo",
@@ -27,6 +28,7 @@ agent_os = AgentOS(
     scheduler=True,
     scheduler_poll_interval=15,
     scheduler_base_url="http://127.0.0.1:8000",
+    internal_service_token=_internal,
 )
 
 app = agent_os.get_app()
