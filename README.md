@@ -43,6 +43,9 @@ OPENAI_API_KEY=sk-...
 DATABASE_URL=postgresql://market:market@localhost:5433/marketresearch
 KNOWLEDGEBASE_DATABASE_URL=postgresql://kb:kb@localhost:5434/knowledgebase
 
+# Scheduler auth (set a fixed value so restarts do not rotate the token)
+INTERNAL_SERVICE_TOKEN=change-me-to-a-long-random-string
+
 # Optional
 KNOWLEDGE_BASE_DIR=./knowledge_base
 DISCORD_BOT_TOKEN=
@@ -51,15 +54,13 @@ DISCORD_CHANNEL_ID=
 
 `DATABASE_URL` uses the async driver internally (`postgresql+asyncpg://…`). `KNOWLEDGEBASE_DATABASE_URL` is normalized for sync PgVector (`postgresql+psycopg://…`).
 
+If `INTERNAL_SERVICE_TOKEN` is unset, AgentOS generates one at startup. That breaks scheduled HTTP calls after a restart until you re-seed schedules or set a stable token in `.env`.
+
 ### 3. Install dependencies
 
-Install Agno and project dependencies (adjust to your environment):
-
 ```bash
-pip install agno python-dotenv uvicorn yfinance pandas matplotlib openai httpx discord.py
+pip install -r requirements.txt
 ```
-
-Use a Postgres driver stack compatible with Agno (`asyncpg`, `psycopg` / `psycopg2-binary`) as required by your Agno version.
 
 ### 4. Run AgentOS
 
@@ -96,6 +97,7 @@ tests/
 docs/             # learnings.md, eval_report.md
 AgentOS.py        # AgentOS entrypoint (FastAPI app)
 main.py           # Local workflow + KB smoke test
+requirements.txt
 docker-compose.yml
 SECURITY.md
 sample_inputs.txt # Example prompts per workflow
@@ -139,7 +141,10 @@ Example inputs and `session_state` overrides are in [sample_inputs.txt](sample_i
 
 With `scheduler=True` on AgentOS, cron jobs are stored in `agno_schedules` and executed by the built-in poller.
 
-Register the daily morning briefing (6:00 Asia/Kolkata, skips if already exists):
+**AgentOS must be running** on port 8000 before cron jobs fire — the poller calls `http://127.0.0.1:8000` with `Authorization: Bearer $INTERNAL_SERVICE_TOKEN`.
+
+1. Start the server: `python AgentOS.py`
+2. Register the daily morning briefing (6:00 Asia/Kolkata, skips if already exists):
 
 ```bash
 python core/scheduler.py
@@ -167,10 +172,10 @@ Results and methodology are documented in [docs/eval_report.md](docs/eval_report
 
 Trade proposals use three tiers of human-in-the-loop control plus input guardrails and a background audit log. Full details: [SECURITY.md](SECURITY.md).
 
-Run guardrail / HITL tests:
+Run guardrail / HITL tests (requires `pytest` from `requirements.txt`):
 
 ```bash
-pytest tests/test_hitl_guardrails.py
+pytest tests/test_hitl_guardrails.py -v
 ```
 
 ## Disclaimer

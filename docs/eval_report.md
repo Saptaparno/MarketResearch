@@ -1,7 +1,11 @@
 # Valura Eval Report
 
-Auto-generated from the most recent `make eval` run.
-Re-run at any time with: `make eval`
+Snapshot from the most recent eval run (`python tests/evals/run_all.py`).
+Re-run at any time with:
+
+```bash
+python tests/evals/run_all.py
+```
 
 ---
 
@@ -114,7 +118,7 @@ The `perf_detect_introduced_regression` test demonstrates the mechanism end-to-e
 3. Since 52 ms > 5 ms × 1.5 = 7.5 ms, the suite raises `AssertionError` — regression detected.
 
 This proves that any real code change making instantiation more than 50 % slower will be caught
-automatically on the next `make eval` run.
+automatically on the next `python tests/evals/run_all.py` run.
 
 ---
 
