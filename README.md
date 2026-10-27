@@ -1,10 +1,10 @@
-# Valura — Multi-Agent Market Intelligence (Agno)
+# Fintech Agentic Microservice — Multi-Agent Market Intelligence (Agno)
 
-A multi-agent market research and advisory platform built on [Agno](https://docs.agno.com). It combines specialized agents, coordinated teams, deterministic workflows, PgVector-backed knowledge, human-in-the-loop trade safety, and an AgentOS runtime with scheduling and tracing.
+A standalone fintech agentic microservice for market research, portfolio analysis, risk assessment, financial planning, and paper-trade workflows. Built on [Agno](https://docs.agno.com), it combines specialized agents, coordinated teams, deterministic workflows, PgVector-backed knowledge, human-in-the-loop trade safety, and an AgentOS runtime with scheduling and tracing.
 
-This repo implements the **Valura Agno Mastery Assignment** (`Valura_Agno_Assignment.pdf`): a training simulator for finance workflows — not a production trading system.
+The service exposes finance capabilities through an AgentOS/FastAPI runtime and can be deployed independently as a backend component. It is designed for research and simulation workflows, not production trading or live order execution.
 
-## Features
+## Service capabilities
 
 - **Agents** — Market research, portfolio health, risk, financial planning, product recommendations, general enquiry, trade (HITL), multimodal (PDF/audio/charts), and backtest.
 - **Teams** — `coordinate`, `route`, and `broadcast` modes over a shared advisory member set.
@@ -180,4 +180,4 @@ pytest tests/test_hitl_guardrails.py -v
 
 ## Disclaimer
 
-Valura is an **Agno learning project**. It uses paper data and simulated trades. Do not use it to manage real money or execute live orders.
+This is a fintech research and simulation service. It uses paper data and simulated trades. Do not use it to manage real money or execute live orders.
